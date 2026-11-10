@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cómo jugar a Civitas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Archivo:wght@400;500;700&family=Noto+Sans+TC:wght@400;700;900&display=swap">
+<style>
+/* Una sola columna para el móvil: cabecera con el perfil de la ciudad creciendo por eras, luego bloques de lectura. */
+:root {
+  --bg: #eef2f4; --surface: #ffffff; --ink: #172430; --muted: #566572; --line: #d5dde3; --gold: #c9921f; --gold-ink: #2b1d00;
+  --sky1: #cfe3ee; --sky2: #eef2f4; --ground: #c7d3c0;
+  --a: #e8453c; --b: #f2c230; --c: #2f8fe8;
+  --f-display: "Bricolage Grotesque", "Noto Sans TC", system-ui, sans-serif;
+  --f-body: "Archivo", "Noto Sans TC", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e151c; --surface: #16212b; --ink: #e8eef2; --muted: #9aabb8; --line: #273541; --gold: #e7b74a; --gold-ink: #2b1d00;
+  --sky1: #142838; --sky2: #0e151c; --ground: #1f2b24; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e151c; --surface: #16212b; --ink: #e8eef2; --muted: #9aabb8; --line: #273541; --gold: #e7b74a; --gold-ink: #2b1d00;
+  --sky1: #142838; --sky2: #0e151c; --ground: #1f2b24; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--f-body); -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 640px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
+h2 { font-size: 26px; font-weight: 800; letter-spacing: -.01em; line-height: 1.15; }
+p { margin: 0; }
+
+/* Cabecera */
+.hero { background: linear-gradient(180deg, var(--sky1), var(--sky2)); }
+.hero .wrap { padding-block: 22px 0; display: grid; gap: 14px; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.langs { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
+.langs button { font: 600 13px/1 var(--f-body); color: var(--muted); background: none; border: 0; padding: 9px 12px; cursor: pointer; }
+.langs button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.langs button:focus-visible, .tabs button:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+h1 { font-size: clamp(54px, 17vw, 88px); font-weight: 800; line-height: .9; letter-spacing: -.03em; }
+.lead { font-size: 19px; line-height: 1.45; max-width: 30ch; }
+.skyline { display: block; width: 100%; height: auto; margin-top: 6px; }
+.eras-strip { display: grid; grid-template-columns: repeat(5, 1fr); font-size: 11px; color: var(--muted); text-align: center; padding-block: 6px 18px; font-weight: 600; }
+
+section .wrap { padding-block: 34px; display: grid; gap: 18px; }
+section + section .wrap { border-top: 1px solid var(--line); }
+
+/* Pasos */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 48px 1fr; gap: 14px; align-items: start; }
+.steps li::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--gold); color: var(--gold-ink); font: 800 22px/1 var(--f-display); }
+.steps b { display: block; font-family: var(--f-display); font-size: 19px; margin-bottom: 2px; }
+.steps span { color: var(--muted); }
+.button-demo { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+.bigbtn { flex: none; width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #f7dc8f, var(--gold) 70%); box-shadow: 0 4px 0 #8a6414, 0 8px 18px rgba(0,0,0,.18); }
+.button-demo p { font-size: 15px; color: var(--muted); }
+
+/* Trivia */
+.abc { display: grid; gap: 10px; }
+.opt { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: 10px 14px; font-weight: 600; }
+.opt i { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: #111; font: 900 17px/1 var(--f-display); font-style: normal; box-shadow: inset 0 -3px 0 rgba(0,0,0,.22); }
+.opt.ok { border-color: #3fae66; }
+.qcard { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: grid; gap: 12px; }
+.qcard .q { font-family: var(--f-display); font-weight: 600; font-size: 18px; line-height: 1.3; }
+.qnote { font-size: 13px; color: var(--muted); }
+.facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.facts li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: baseline; padding-bottom: 10px; border-bottom: 1px dashed var(--line); }
+.facts li:last-child { border-bottom: 0; padding-bottom: 0; }
+.facts b { font-family: var(--f-display); font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--gold); line-height: 1.1; }
+.facts span { color: var(--muted); }
+
+/* Viaje por eras */
+.tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: var(--surface); border: 1px solid var(--line); padding: 5px; border-radius: 14px; }
+.tabs button { font: 700 15px/1 var(--f-body); color: var(--muted); background: none; border: 0; border-radius: 10px; padding: 11px 6px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; }
+.timeline li { display: grid; grid-template-columns: 22px 1fr; gap: 14px; position: relative; padding-bottom: 18px; }
+.timeline li::after { content: ""; position: absolute; left: 10px; top: 22px; bottom: 0; width: 2px; background: var(--line); }
+.timeline li:last-child::after { display: none; }
+.dot { width: 22px; height: 22px; border-radius: 50%; background: var(--era); box-shadow: 0 0 0 4px color-mix(in srgb, var(--era) 25%, transparent); margin-top: 2px; }
+.timeline h3 { font-size: 20px; font-weight: 800; line-height: 1.2; }
+.yrs { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.lm { margin-top: 6px; font-size: 15px; }
+.lm em { font-style: normal; font-weight: 700; color: var(--ink); background: color-mix(in srgb, var(--era) 22%, transparent); padding: 1px 7px; border-radius: 6px; }
+
+/* La ciudad vive */
+.life { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.life div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; min-width: 0; }
+.life b { display: block; font-family: var(--f-display); font-size: 16px; margin-bottom: 3px; }
+.life span { font-size: 14px; color: var(--muted); line-height: 1.45; display: block; }
+footer .wrap { padding-block: 26px 40px; border-top: 1px solid var(--line); display: grid; gap: 6px; }
+footer p { color: var(--muted); font-size: 14px; }
+footer strong { font-family: var(--f-display); font-size: 20px; color: var(--ink); }
+@media (min-width: 560px) { .life { grid-template-columns: repeat(3, 1fr); } }
+@media (prefers-reduced-motion: no-preference) { .skyline .rise { transform-box: fill-box; transform-origin: bottom; animation: rise .9s cubic-bezier(.2,.8,.3,1) both; } @keyframes rise { from { transform: scaleY(.2); opacity: 0; } } }
+</style>
+</head>
+<body>
+
+
+<header class="hero">
+  <div class="wrap">
+    <div class="top">
+      <span class="eyebrow" data-t="eyebrow"></span>
+      <div class="langs" role="group" aria-label="Idioma / Language / 語言">
+        <button type="button" id="l-es" data-lang="es">ES</button><button type="button" id="l-en" data-lang="en">EN</button><button type="button" id="l-zh" data-lang="zh">中文</button>
+      </div>
+    </div>
+    <h1>Civitas</h1>
+    <p class="lead" data-t="lead"></p>
+    <svg class="skyline" viewBox="0 0 600 170" role="img" aria-labelledby="skyT">
+      <title id="skyT" data-t="skyAlt"></title>
+      <rect x="0" y="150" width="600" height="20" fill="var(--ground)"/>
+      <!-- Antigua: anfiteatro -->
+      <g class="rise" style="animation-delay:.05s" fill="#e7b56a">
+        <path d="M20 150 V112 Q70 98 120 112 V150 Z"/>
+        <g fill="var(--bg)" opacity=".55"><rect x="32" y="122" width="10" height="16" rx="5"/><rect x="52" y="120" width="10" height="18" rx="5"/><rect x="72" y="120" width="10" height="18" rx="5"/><rect x="92" y="122" width="10" height="16" rx="5"/></g>
+      </g>
+      <!-- Medieval: catedral -->
+      <g class="rise" style="animation-delay:.2s" fill="#d9b25a">
+        <rect x="140" y="104" width="70" height="46"/><polygon points="140,104 175,82 210,104"/>
+        <rect x="146" y="62" width="16" height="42"/><polygon points="146,62 154,36 162,62"/>
+        <rect x="188" y="62" width="16" height="42"/><polygon points="188,62 196,36 204,62"/>
+        <circle cx="175" cy="112" r="8" fill="var(--bg)" opacity=".55"/>
+      </g>
+      <!-- Industrial: torre de hierro -->
+      <g class="rise" style="animation-delay:.35s" fill="#e8894a">
+        <polygon points="232,150 262,40 266,40 296,150 284,150 264,80 244,150"/>
+        <rect x="244" y="112" width="40" height="5"/><rect x="254" y="80" width="20" height="4"/><rect x="263" y="22" width="2" height="20"/>
+      </g>
+      <!-- Contemporánea: rascacielos -->
+      <g class="rise" style="animation-delay:.5s" fill="#63b4ff">
+        <rect x="316" y="44" width="34" height="106"/><rect x="354" y="78" width="26" height="72"/><rect x="384" y="96" width="22" height="54"/>
+        <g fill="var(--bg)" opacity=".45"><rect x="322" y="52" width="22" height="3"/><rect x="322" y="62" width="22" height="3"/><rect x="322" y="72" width="22" height="3"/><rect x="322" y="82" width="22" height="3"/><rect x="322" y="92" width="22" height="3"/><rect x="322" y="102" width="22" height="3"/><rect x="322" y="112" width="22" height="3"/></g>
+      </g>
+      <!-- Futura: ascensor orbital -->
+      <g class="rise" style="animation-delay:.65s" fill="#2fc7d6">
+        <rect x="489" y="0" width="4" height="150"/><ellipse cx="491" cy="58" rx="16" ry="5"/>
+        <path d="M430 150 Q445 100 470 104 Q491 70 512 104 Q537 100 552 150 Z"/>
+        <circle cx="491" cy="118" r="10" fill="var(--bg)" opacity=".5"/>
+      </g>
+    </svg>
+    <div class="eras-strip" id="erasStrip"></div>
+  </div>
+</header>
+
+<main>
+  <section aria-labelledby="h-how"><div class="wrap">
+    <h2 id="h-how" data-t="howT"></h2>
+    <div class="button-demo"><div class="bigbtn" aria-hidden="true"></div><p data-t="btnNote"></p></div>
+    <ol class="steps">
+      <li><div><b data-t="s1t"></b><span data-t="s1"></span></div></li>
+      <li><div><b data-t="s2t"></b><span data-t="s2"></span></div></li>
+      <li><div><b data-t="s3t"></b><span data-t="s3"></span></div></li>
+    </ol>
+  </div></section>
+
+  <section aria-labelledby="h-quiz"><div class="wrap">
+    <h2 id="h-quiz" data-t="quizT"></h2>
+    <p data-t="quizP"></p>
+    <div class="qcard" aria-label="Ejemplo">
+      <span class="eyebrow" data-t="quizEx"></span>
+      <p class="q" data-t="qQ"></p>
+      <div class="abc">
+        <div class="opt"><i style="background:var(--a)">A</i><span data-t="qA"></span></div>
+        <div class="opt ok"><i style="background:var(--b)">B</i><span data-t="qB"></span></div>
+        <div class="opt"><i style="background:var(--c)">C</i><span data-t="qC"></span></div>
+      </div>
+      <p class="qnote" data-t="qNote"></p>
+    </div>
+    <ul class="facts">
+      <li><b>3</b><span data-t="f1"></span></li>
+      <li><b>20 s</b><span data-t="f2"></span></li>
+      <li><b>+10–30</b><span data-t="f3"></span></li>
+    </ul>
+  </div></section>
+
+  <section aria-labelledby="h-rw"><div class="wrap">
+    <h2 id="h-rw" data-t="rwT"></h2>
+    <ul class="facts">
+      <li><b>10 · 50 · 100</b><span data-t="r1"></span></li>
+      <li><b>25 · 50 · 75</b><span data-t="r2"></span></li>
+      <li><b data-t="r3k"></b><span data-t="r3"></span></li>
+    </ul>
+  </div></section>
+
+  <section aria-labelledby="h-trip"><div class="wrap">
+    <h2 id="h-trip" data-t="tripT"></h2>
+    <p data-t="tripP"></p>
+    <div class="tabs" role="tablist" aria-labelledby="h-trip">
+      <button type="button" role="tab" id="t-europa" data-reg="europa"></button><button type="button" role="tab" id="t-america" data-reg="america"></button><button type="button" role="tab" id="t-asia" data-reg="asia"></button>
+    </div>
+    <ol class="timeline" id="timeline" role="tabpanel"></ol>
+  </div></section>
+
+  <section aria-labelledby="h-life"><div class="wrap">
+    <h2 id="h-life" data-t="lifeT"></h2>
+    <div class="life">
+      <div><b data-t="v1t"></b><span data-t="v1"></span></div>
+      <div><b data-t="v2t"></b><span data-t="v2"></span></div>
+      <div><b data-t="v3t"></b><span data-t="v3"></span></div>
+      <div><b data-t="v4t"></b><span data-t="v4"></span></div>
+      <div><b data-t="v5t"></b><span data-t="v5"></span></div>
+      <div><b data-t="v6t"></b><span data-t="v6"></span></div>
+    </div>
+  </div></section>
+</main>
+
+<footer><div class="wrap">
+  <strong data-t="endT"></strong>
+  <p data-t="endP"></p>
+</div></footer>
+
+<script>
+const T = {
+  eyebrow: ['Juego colectivo · Exposición', 'Collective game · Exhibition', '集體遊戲 · 展覽'],
+  lead: ['Una ciudad que construimos entre todos los visitantes, desde la Antigüedad hasta el futuro.', 'A city built together by every visitor, from Antiquity to the future.', '一座由所有訪客一起建造的城市，從古代一路到未來。'],
+  skyAlt: ['Perfil de la ciudad creciendo en cinco eras: anfiteatro, catedral, torre de hierro, rascacielos y ascensor orbital', 'City skyline growing over five ages: amphitheatre, cathedral, iron tower, skyscrapers and space elevator', '城市天際線在五個時代中成長：圓形劇場、大教堂、鐵塔、摩天大樓與軌道電梯'],
+  eras: [['Antigua', 'Medieval', 'Industrial', 'Moderna', 'Futura'], ['Ancient', 'Medieval', 'Industrial', 'Modern', 'Future'], ['古代', '中世紀', '工業', '現代', '未來']],
+  howT: ['Cómo se juega', 'How to play', '怎麼玩'],
+  btnNote: ['Solo hace falta el botón grande. También vale tocar la ciudad en la pantalla o pulsar cualquier tecla.', 'All you need is the big button. Tapping the city on screen or pressing any key works too.', '只需要按大按鈕。點一下螢幕上的城市或按任何按鍵也可以。'],
+  s1t: ['Pulsa', 'Press', '按下按鈕'],
+  s1: ['Cada pulsación trae materiales: piedra, madera, acero, hormigón… según la época. Si pulsáis rápido y seguido, el combo multiplica lo que aportáis.', 'Every press brings materials: stone, timber, steel, concrete… depending on the age. Press fast and keep going, and the combo multiplies what you add.', '每按一次就帶來建材：依時代不同，有石頭、木材、鋼鐵、混凝土……連續快速按，連擊會讓貢獻加倍。'],
+  s2t: ['Construye', 'Build', '建造'],
+  s2: ['Con los materiales aparecen casas, mercados y fábricas, y los edificios viejos se transforman. Cuando la era tiene suficientes edificios, todos juntos levantáis su gran obra.', 'Materials turn into homes, markets and factories, and old buildings get upgraded. Once the age has enough buildings, everyone builds its great landmark together.', '建材會變成房屋、市場和工廠，舊建築也會升級。當這個時代的建築夠多時，大家一起蓋起它的偉大地標。'],
+  s3t: ['Viaja en el tiempo', 'Travel through time', '穿越時空'],
+  s3: ['Al terminar la gran obra, la ciudad entera salta a la era siguiente. Son cinco eras; después de la última, la ciudad está completa y empieza otra.', 'When the landmark is finished, the whole city jumps to the next age. There are five ages; after the last one the city is complete and a new one begins.', '地標完成後，整座城市會跳到下一個時代。共有五個時代；最後一個完成後，城市就大功告成，接著開始新的一座。'],
+  quizT: ['El trivia', 'The trivia', '問答遊戲'],
+  quizP: ['Mientras construyes aparecen preguntas sobre la época y la región de tu ciudad. Responde con los botones de colores.', 'While you build, questions pop up about your city’s age and region. Answer with the coloured buttons.', '建造時會出現與城市所在時代和地區有關的問題。用彩色按鈕回答。'],
+  quizEx: ['Ejemplo · Edad Media', 'Example · Middle Ages', '範例 · 中世紀'],
+  qQ: ['¿De qué estilo es la catedral de Notre-Dame de París?', 'What style is Notre-Dame Cathedral in Paris?', '巴黎聖母院是什麼建築風格？'],
+  qA: ['Barroco', 'Baroque', '巴洛克式'], qB: ['Gótico', 'Gothic', '哥德式'], qC: ['Modernista', 'Art Nouveau', '新藝術風格'],
+  qNote: ['Respuesta: B. El gótico usa arcos apuntados y grandes vidrieras para llenar de luz el templo.', 'Answer: B. Gothic churches use pointed arches and huge stained-glass windows to fill them with light.', '答案：B。哥德式教堂用尖拱和巨大的彩繪玻璃窗讓室內充滿光線。'],
+  f1: ['preguntas en cada era: dos mientras crecen los edificios y una durante la gran obra.', 'questions in each age: two while the buildings go up and one during the great landmark.', '每個時代的題數：建築成長時兩題，蓋地標時一題。'],
+  f2: ['para contestar. Si fallas no pierdes nada y verás la respuesta correcta con una explicación.', 'to answer. A wrong answer costs nothing, and you’ll see the right one with a short explanation.', '作答時間。答錯不會扣分，還會看到正確答案和簡短說明。'],
+  f3: ['pulsaciones de regalo por acierto. Cuanto antes contestes y más aciertos seguidos lleves, más ganas.', 'free presses for each right answer. The faster you answer and the longer your streak, the more you win.', '每答對一題送的點擊數。答得越快、連續答對越多，獎勵就越多。'],
+  rwT: ['Premios para quien pulsa', 'Rewards for pressing', '按鈕獎勵'],
+  r1: ['Al llegar a 10, 25, 50, 100, 200 y 500 pulsaciones sale un cartel con confeti: de «¡Buen comienzo!» a «¡Leyenda de Civitas!».', 'At 10, 25, 50, 100, 200 and 500 presses a banner with confetti appears, from “Great start!” to “Legend of Civitas!”.', '按到 10、25、50、100、200 和 500 次時，會出現彩紙橫幅，從「好的開始！」到「Civitas 傳奇！」。'],
+  r2: ['Si tu pulsación completa el edificio nº 25, 50, 75… de la ciudad, sube un pilar de luz dorada sobre él: lo has construido tú.', 'If your press completes the city’s 25th, 50th, 75th… building, a golden beam rises above it: you built it.', '如果你的點擊完成了城市第 25、50、75……棟建築，它上方會升起金色光柱：那是你蓋的。'],
+  r3k: ['Récord', 'Record', '紀錄'],
+  r3: ['La pantalla lleva la cuenta del día: ciudades terminadas, clics de todos y el récord de la ciudad más rápida.', 'The screen keeps today’s tally: cities completed, everyone’s clicks and the fastest city on record.', '螢幕會記錄當天的成績：完成的城市數、所有人的點擊數，以及最快完成一座城市的紀錄。'],
+  tripT: ['Las cinco eras', 'The five ages', '五個時代'],
+  tripP: ['La ciudad puede ser europea, americana o asiática. Cada región tiene sus propias épocas, edificios y gran obra en cada era.', 'The city can be European, American or Asian. Each region has its own periods, buildings and great landmark in every age.', '城市可以位於歐洲、美洲或亞洲。每個地區在每個時代都有自己的時期、建築和地標。'],
+  lmLabel: ['Gran obra:', 'Landmark:', '地標：'],
+  regions: [['Europa', 'América', 'Asia'], ['Europe', 'Americas', 'Asia'], ['歐洲', '美洲', '亞洲']],
+  lifeT: ['La ciudad está viva', 'A living city', '活生生的城市'],
+  v1t: ['Día y noche', 'Day and night', '日與夜'], v1: ['Amanece y anochece; de noche se encienden farolas y ventanas.', 'The sun rises and sets; at night street lamps and windows light up.', '日出日落；夜裡路燈和窗戶都會亮起。'],
+  v2t: ['Estaciones', 'Seasons', '四季'], v2: ['Flores en primavera, hojas rojas en otoño y nieve en invierno.', 'Blossom in spring, red leaves in autumn and snow in winter.', '春天開花、秋天紅葉、冬天下雪。'],
+  v3t: ['Clima', 'Weather', '天氣'], v3: ['Lluvia, tormentas con relámpagos, niebla o cielo despejado.', 'Rain, thunderstorms, fog or clear skies.', '下雨、雷雨、起霧或晴空萬里。'],
+  v4t: ['Gente de cada época', 'People of every age', '各時代的人們'], v4: ['Peatones con la ropa de su tiempo, carros, tranvías, coches y vehículos voladores.', 'Pedestrians dressed for their time, carts, trams, cars and flying vehicles.', '穿著當代服裝的行人、馬車、電車、汽車和飛行載具。'],
+  v5t: ['Campo y cielo', 'Fields and sky', '田野與天空'], v5: ['Rebaños pastando, pájaros, globos aerostáticos, aviones y luciérnagas en verano.', 'Grazing herds, birds, hot-air balloons, planes and fireflies in summer.', '吃草的牛羊、飛鳥、熱氣球、飛機，還有夏夜的螢火蟲。'],
+  v6t: ['Música', 'Music', '音樂'], v6: ['La banda sonora cambia con cada era y reacciona a cada pulsación.', 'The soundtrack changes with each age and reacts to every press.', '配樂隨每個時代改變，也會回應每一次點擊。'],
+  endT: ['Ahora te toca a ti', 'Now it’s your turn', '現在輪到你了'],
+  endP: ['Vuelve a la pantalla y pulsa el botón: cada pulsación cuenta.', 'Head back to the screen and press the button: every press counts.', '回到螢幕前按下按鈕吧：每一次都算數。'],
+};
+const ERAS = {
+  europa: [['Edad Antigua', 'Ancient Age', '古代', -500, 476, 'Anfiteatro', 'Amphitheatre', '圓形劇場', '#e7b56a'], ['Edad Media', 'Middle Ages', '中世紀', 476, 1492, 'Catedral', 'Cathedral', '大教堂', '#d9b25a'],
+    ['Era Industrial', 'Industrial Age', '工業時代', 1760, 1914, 'Torre de Hierro', 'Iron Tower', '鐵塔', '#e8894a'], ['Era Contemporánea', 'Contemporary Age', '當代', 1945, 2030, 'Torre Horizonte', 'Horizon Tower', '地平線大樓', '#63b4ff'],
+    ['Era Futura', 'Future Age', '未來時代', 2050, 2200, 'Ascensor Orbital', 'Space Elevator', '軌道電梯', '#2fc7d6']],
+  america: [['Era Precolombina', 'Pre-Columbian Age', '前哥倫布時代', -1000, 1492, 'Gran Pirámide', 'Great Pyramid', '大金字塔', '#5fbf8f'], ['Era Colonial', 'Colonial Age', '殖民時代', 1492, 1810, 'Catedral Barroca', 'Baroque Cathedral', '巴洛克大教堂', '#e0864a'],
+    ['Era Industrial', 'Industrial Age', '工業時代', 1820, 1914, 'Gran Estación', 'Grand Station', '大車站', '#c9a35c'], ['Era de los Rascacielos', 'Skyscraper Age', '摩天大樓時代', 1920, 2030, 'Torre Art Déco', 'Art Deco Tower', '裝飾藝術大樓', '#e6b422'],
+    ['Era Futura', 'Future Age', '未來時代', 2050, 2200, 'Puerto Espacial', 'Spaceport', '太空港', '#ffb14a']],
+  asia: [['China Imperial', 'Imperial China', '帝制中國', -221, 907, 'Palacio Imperial', 'Imperial Palace', '皇宮', '#e0483c'], ['Japón Feudal', 'Feudal Japan', '封建日本', 1185, 1868, 'Castillo Blanco', 'White Castle', '白城', '#e2587a'],
+    ['Era Industrial', 'Industrial Age', '工業時代', 1868, 1937, 'Torre de la Aduana', 'Customs House Tower', '海關大樓', '#3fbf9a'], ['Asia Moderna', 'Modern Asia', '現代亞洲', 1960, 2030, 'Torre 101', '101 Tower', '101大樓', '#ff4f8b'],
+    ['Era Futura', 'Future Age', '未來時代', 2050, 2200, 'Arcología Loto', 'Lotus Arcology', '蓮花生態巨構', '#36c98a']],
+};
+const LANGS = ['es', 'en', 'zh'];
+let li = 0, reg = 'europa';
+try { const s = localStorage.getItem('civitas-guia-lang'); if (LANGS.includes(s)) li = LANGS.indexOf(s); else { const n = (navigator.language || '').toLowerCase(); li = n.startsWith('zh') ? 2 : n.startsWith('es') ? 0 : n ? 1 : 0; } } catch (e) {}
+const yr = y => y < 0 ? [`${-y} a. C.`, `${-y} BC`, `西元前${-y}年`][li] : [`${y}`, `${y}`, `${y}年`][li];
+function render() {
+  document.documentElement.lang = ['es', 'en', 'zh-Hant'][li];
+  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = T[el.dataset.t][li]; });
+  document.querySelectorAll('.langs button').forEach((b, i) => b.setAttribute('aria-pressed', String(i === li)));
+  document.getElementById('erasStrip').innerHTML = T.eras[li].map(e => `<span>${e}</span>`).join('');
+  ['europa', 'america', 'asia'].forEach((r, i) => { const b = document.getElementById('t-' + r); b.textContent = T.regions[li][i]; b.setAttribute('aria-selected', String(r === reg)); b.tabIndex = r === reg ? 0 : -1; });
+  document.getElementById('timeline').innerHTML = ERAS[reg].map(e => `<li style="--era:${e[8]}"><span class="dot" aria-hidden="true"></span><div><h3>${e[li]}</h3><div class="yrs">${yr(e[3])} – ${yr(e[4])}</div><p class="lm">${T.lmLabel[li]} <em>${e[5 + li]}</em></p></div></li>`).join('');
+}
+document.querySelectorAll('.langs button').forEach((b, i) => b.addEventListener('click', () => { li = i; try { localStorage.setItem('civitas-guia-lang', LANGS[i]); } catch (e) {} render(); }));
+document.querySelectorAll('.tabs button').forEach(b => {
+  b.addEventListener('click', () => { reg = b.dataset.reg; render(); });
+  b.addEventListener('keydown', e => { const k = ['europa', 'america', 'asia'], i = k.indexOf(reg); if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { reg = k[(i + (e.key === 'ArrowRight' ? 1 : 2)) % 3]; render(); document.getElementById('t-' + reg).focus(); } });
+});
+render();
+</script>
+
+</body>
+</html>
