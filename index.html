@@ -137,7 +137,7 @@ footer strong { font-family: var(--f-display); font-size: 20px; color: var(--ink
         <rect x="316" y="44" width="34" height="106"/><rect x="354" y="78" width="26" height="72"/><rect x="384" y="96" width="22" height="54"/>
         <g fill="var(--bg)" opacity=".45"><rect x="322" y="52" width="22" height="3"/><rect x="322" y="62" width="22" height="3"/><rect x="322" y="72" width="22" height="3"/><rect x="322" y="82" width="22" height="3"/><rect x="322" y="92" width="22" height="3"/><rect x="322" y="102" width="22" height="3"/><rect x="322" y="112" width="22" height="3"/></g>
       </g>
-      <!-- Futura: ascensor orbital -->
+      <!-- Futura -->
       <g class="rise" style="animation-delay:.65s" fill="#2fc7d6">
         <rect x="489" y="0" width="4" height="150"/><ellipse cx="491" cy="58" rx="16" ry="5"/>
         <path d="M430 150 Q445 100 470 104 Q491 70 512 104 Q537 100 552 150 Z"/>
@@ -219,7 +219,7 @@ footer strong { font-family: var(--f-display); font-size: 20px; color: var(--ink
 const T = {
   eyebrow: ['Juego colectivo · Exposición', 'Collective game · Exhibition', '集體遊戲 · 展覽'],
   lead: ['Una ciudad que construimos entre todos los visitantes, desde la Antigüedad hasta el futuro.', 'A city built together by every visitor, from Antiquity to the future.', '一座由所有訪客一起建造的城市，從古代一路到未來。'],
-  skyAlt: ['Perfil de la ciudad creciendo en cinco eras: anfiteatro, catedral, torre de hierro, rascacielos y ascensor orbital', 'City skyline growing over five ages: amphitheatre, cathedral, iron tower, skyscrapers and space elevator', '城市天際線在五個時代中成長：圓形劇場、大教堂、鐵塔、摩天大樓與軌道電梯'],
+  skyAlt: ['Perfil de la ciudad creciendo en cinco eras: anfiteatro, catedral, torre de hierro, rascacielos y ciudad del futuro', 'City skyline growing over five ages: amphitheatre, cathedral, iron tower, skyscrapers and city of the future', '城市天際線在五個時代中成長：圓形劇場、大教堂、鐵塔、摩天大樓與未來城市'],
   eras: [['Antigua', 'Medieval', 'Industrial', 'Moderna', 'Futura'], ['Ancient', 'Medieval', 'Industrial', 'Modern', 'Future'], ['古代', '中世紀', '工業', '現代', '未來']],
   howT: ['Cómo se juega', 'How to play', '怎麼玩'],
   btnNote: ['Solo hace falta el botón grande. También vale tocar la ciudad en la pantalla o pulsar cualquier tecla.', 'All you need is the big button. Tapping the city on screen or pressing any key works too.', '只需要按大按鈕。點一下螢幕上的城市或按任何按鍵也可以。'],
@@ -260,13 +260,13 @@ const T = {
 const ERAS = {
   europa: [['Edad Antigua', 'Ancient Age', '古代', -500, 476, 'Anfiteatro', 'Amphitheatre', '圓形劇場', '#e7b56a'], ['Edad Media', 'Middle Ages', '中世紀', 476, 1492, 'Catedral', 'Cathedral', '大教堂', '#d9b25a'],
     ['Era Industrial', 'Industrial Age', '工業時代', 1760, 1914, 'Torre de Hierro', 'Iron Tower', '鐵塔', '#e8894a'], ['Era Contemporánea', 'Contemporary Age', '當代', 1945, 2030, 'Torre Horizonte', 'Horizon Tower', '地平線大樓', '#63b4ff'],
-    ['Era Futura', 'Future Age', '未來時代', 2050, 2200, 'Ascensor Orbital', 'Space Elevator', '軌道電梯', '#2fc7d6']],
+    ['Era Futura', 'Future Age', '未來時代', 2050, 2200, 'Gran Colisionador', 'Great Collider', '大型對撞機', '#2fc7d6']],
   america: [['Era Precolombina', 'Pre-Columbian Age', '前哥倫布時代', -1000, 1492, 'Gran Pirámide', 'Great Pyramid', '大金字塔', '#5fbf8f'], ['Era Colonial', 'Colonial Age', '殖民時代', 1492, 1810, 'Catedral Barroca', 'Baroque Cathedral', '巴洛克大教堂', '#e0864a'],
     ['Era Industrial', 'Industrial Age', '工業時代', 1820, 1914, 'Gran Estación', 'Grand Station', '大車站', '#c9a35c'], ['Era de los Rascacielos', 'Skyscraper Age', '摩天大樓時代', 1920, 2030, 'Torre Art Déco', 'Art Deco Tower', '裝飾藝術大樓', '#e6b422'],
     ['Era Futura', 'Future Age', '未來時代', 2050, 2200, 'Puerto Espacial', 'Spaceport', '太空港', '#ffb14a']],
   asia: [['China Imperial', 'Imperial China', '帝制中國', -221, 907, 'Palacio Imperial', 'Imperial Palace', '皇宮', '#e0483c'], ['Japón Feudal', 'Feudal Japan', '封建日本', 1185, 1868, 'Castillo Blanco', 'White Castle', '白城', '#e2587a'],
     ['Era Industrial', 'Industrial Age', '工業時代', 1868, 1937, 'Torre de la Aduana', 'Customs House Tower', '海關大樓', '#3fbf9a'], ['Asia Moderna', 'Modern Asia', '現代亞洲', 1960, 2030, 'Torre 101', '101 Tower', '101大樓', '#ff4f8b'],
-    ['Era Futura', 'Future Age', '未來時代', 2050, 2200, 'Arcología Loto', 'Lotus Arcology', '蓮花生態巨構', '#36c98a']],
+    ['Era Futura', 'Future Age', '未來時代', 2050, 2200, 'Bosque de Superárboles', 'Supertree Grove', '超級樹林', '#36c98a']],
 };
 const LANGS = ['es', 'en', 'zh'];
 let li = 0, reg = 'europa';
